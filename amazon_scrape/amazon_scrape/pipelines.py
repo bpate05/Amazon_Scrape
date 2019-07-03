@@ -11,7 +11,7 @@ class AmazonScrapePipeline(object):
     @classmethod
     def from_crawler(cls, crawler):
         return cls(
-            mongo_uri=crawler.settings.get('mongodb://localhost:27020/mydb'),
+            mongo_uri=crawler.settings.get('mongodb://localhost:27017/mydb'),
             mongo_db=crawler.settings.get('Amazon_DB', 'Amazon')
         )
 
@@ -22,6 +22,10 @@ class AmazonScrapePipeline(object):
     def close_spider(self, spider):
         self.client.close()
 
+    # def process_item(self, item, spider):
+    #     self.db[self.collection_name].insert_one(dict(item))
+    #     return item
+
     def process_item(self, item, spider):
-        self.db[self.collection_name].insert_one(dict(item))
+        self.db[self.collection_name].insert_one(item)
         return item
