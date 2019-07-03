@@ -3,8 +3,9 @@ from amazon_scrape.items import AmazonScrapeItem
 
 class GoproSpider(scrapy.Spider):
     name = 'GoProReviews'
+    page_number = 2
     allowed_domains = ['www.amazon.com']
-    start_urls = ['https://www.amazon.com/GoPro-Fusion-Waterproof-Digital-Spherical/product-reviews/B0792MJLNM/ref=cm_cr_dp_d_show_all_top?ie=UTF8&reviewerType=all_reviews']
+    start_urls = ['https://www.amazon.com/GoPro-Fusion-Waterproof-Digital-Spherical/product-reviews/B0792MJLNM/ref=cm_cr_dp_d_show_all_top?ie=UTF8&reviewerType=all_reviews&pageNumber=1']
 
     def parse(self, response):
         items = AmazonScrapeItem()
@@ -29,6 +30,11 @@ class GoproSpider(scrapy.Spider):
                 'stars': star.strip(),
                 'text': text.strip()
             }
+        
+        next_page = 'https://www.amazon.com/GoPro-Fusion-Waterproof-Digital-Spherical/product-reviews/B0792MJLNM/ref=cm_cr_arp_d_paging_btm_next_2?ie=UTF8&reviewerType=all_reviews&pageNumber=' + str(GoproSpider.page_number)
+        if GoproSpider.page_number <= 8:
+            GoproSpider.page_number += 1
+            yield response.follow(next_page, callback = self.parse) 
 
         # next_relative_url = 'response.xpath("//li[@class='a-last']//@href").get()'
         # next_abs_url = response.urljoin(next_relative_url)
