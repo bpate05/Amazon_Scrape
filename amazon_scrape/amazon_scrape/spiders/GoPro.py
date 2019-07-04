@@ -1,7 +1,7 @@
-import scrapy
 """Define spiders for GoPro"""
-
+import scrapy
 from amazon_scrape.items import AmazonScrapeItem
+from datetime import datetime
 
 class GoproSpider(scrapy.Spider):
     """GoPro Spider class"""
@@ -32,11 +32,15 @@ class GoproSpider(scrapy.Spider):
         # zips content together and yields a dictionary
         for ids, title, date, star, text in zip(items['review_id'], items['title'], 
             items['date'], items['stars'], items['text']):
+            star = float(star[0:2])
+            formats = "%B %d, %Y"
+            date = date.lower()
+            date = datetime.strptime(date, formats).strftime("%m/%d/%Y")
             yield {
                 'review_id': ids.strip(),
                 'title': title.strip(),
                 'review_date': date.strip(),
-                'stars': star.strip(),
+                'stars': star,
                 'text': text.strip()
             }
         
@@ -49,3 +53,34 @@ class GoproSpider(scrapy.Spider):
             GoproSpider.page_number += 1
             # call back to parse, store elements on new page
             yield response.follow(next_page, callback = self.parse)
+
+        # # from all reviews page 1
+
+        # # annoying spaces
+        # product_name = response.xpath("//a[@data-hook='product-link']/text()").get()
+        # brand_name = response.xpath("//a[@class='a-size-base a-link-normal']/text()").get()
+        # source = "Amazon"
+        # # range
+        # price_range = response.xpath("//span[@class='a-color-price arp-price']/text()").getall()
+        # price_msrp = 
+        # price_sale = 
+        # # not available on all reviews page!
+        # specs = 
+        # stars_aggregate = response.xpath("//span[@data-hook='rating-out-of-text']/text()").get()
+        # number_reviews = response.xpath("//span[@data-hook='total-review-count']/text()").get()
+
+        # # from product home page
+
+        # # lots of line breaks
+        # product_name = response.xpath("//span[@id='productTitle']/text()").get()
+        # brand_name = response.xpath("//a[@id='bylineInfo']/text()").get()
+        # source = "Amazon"
+        # price_range = ""
+        # price_msrp = 
+        # price_sale = 
+        # # extra stuff at start and end
+        # specs = response.xpath("//div[@id='productDescription']/p/text()").get()
+        # # see above, fixed
+        # stars_aggregate = response.xpath("//span[@class='a-icon-alt']/text()").get()
+        # # in format '79 customer reviews'
+        # number_reviews = response.xpath("//span[@id='acrCustomerReviewText']/text()").get()
