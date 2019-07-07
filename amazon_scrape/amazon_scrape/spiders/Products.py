@@ -52,5 +52,5 @@ class ProdcutsSpider(scrapy.Spider):
             'specs': items['specs'].strip(),
             'star_aggregate': stars,
             'number_reviews': number_reviews,
-            'prodcut_id': asin
+            'product_id': asin
         }
