@@ -2,8 +2,8 @@
 import pymongo
 
 class AmazonScrapePipeline(object):
-
-    collection_name = 'GoPro'
+    """Pipeline for GoProReviews Spider"""
+    collection_name = 'GoProReviews'
 
     def __init__(self, mongo_uri, mongo_db):
         self.mongo_uri = mongo_uri
@@ -21,6 +21,9 @@ class AmazonScrapePipeline(object):
         """Opens spider and establishes connections to DB"""
         self.client = pymongo.MongoClient(self.mongo_uri)
         self.db = self.client[self.mongo_db]
+        # changes collection name based on name of spider
+        if hasattr(spider, 'collection_name'):
+            self.collection_name = spider.collection_name
 
     def close_spider(self, spider):
         self.client.close()
