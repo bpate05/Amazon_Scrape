@@ -13,6 +13,7 @@ class AmazonScrapeItem(scrapy.Item):
     product_name = scrapy.Field()
     brand_name = scrapy.Field()
     source = scrapy.Field()
+    price = scrapy.Field()
     specs = scrapy.Field()
     stars_aggregate = scrapy.Field()
     number_reviews = scrapy.Field()

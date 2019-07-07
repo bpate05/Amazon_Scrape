@@ -31,4 +31,19 @@ class AmazonScrapePipeline(object):
     def process_item(self, item, spider):
         """Insert items into collection"""
         self.db[self.collection_name].insert_one(item)
+
+        # append product id from Products to each review in GoProReviews
+        if self.collection_name=='Products':
+            conn = 'mongodb://localhost:27017'
+            client = pymongo.MongoClient(conn)
+            db = client.Amazon
+            gpr = db.GoProReviews
+            var = item['product_id']
+            gpr.update_many({},
+                { '$set':
+                    {
+                    'product_id': var
+                    }
+                }
+            )
         return item
