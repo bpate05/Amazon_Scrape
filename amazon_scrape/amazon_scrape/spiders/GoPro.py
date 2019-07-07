@@ -10,7 +10,6 @@ class GoproSpider(scrapy.Spider):
     page_number = 2
     allowed_domains = ['www.amazon.com']
     start_urls = ['https://www.amazon.com/GoPro-Fusion-Waterproof-Digital-Spherical/product-reviews/B0792MJLNM/ref=cm_cr_dp_d_show_all_top?ie=UTF8&reviewerType=all_reviews&pageNumber=1']
-    pipelines = ['first']
 
     def parse(self, response):
         """Obtains identified objects from start_url"""
@@ -33,9 +32,12 @@ class GoproSpider(scrapy.Spider):
         # zips content together and yields a dictionary
         for ids, title, date, star, text in zip(items['review_id'], items['title'], 
             items['date'], items['stars'], items['text']):
+            # convert to float
             star = float(star[0:2])
+            # date-time format for extracted date
             formats = "%B %d, %Y"
             date = date.lower()
+            # adjust to desired date-time format
             date = datetime.strptime(date, formats).strftime("%m/%d/%Y")
             yield {
                 'review_id': ids.strip(),

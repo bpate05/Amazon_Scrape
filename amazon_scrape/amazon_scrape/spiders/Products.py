@@ -8,7 +8,6 @@ class ProdcutsSpider(scrapy.Spider):
     name = "Products"
     allowed_domains = ['www.amazon.com']
     start_urls = ['https://www.amazon.com/GoPro-Fusion-Waterproof-Digital-Spherical/dp/B0792MJLNM/ref=cm_cr_arp_d_product_top?ie=UTF8']
-    pipelines = ['second']
     collection_name = 'Products'
 
     def parse(self, response):
@@ -16,12 +15,10 @@ class ProdcutsSpider(scrapy.Spider):
         items = AmazonScrapeItem()
 
         # paths to elements
-       # lots of line breaks
         product_name = response.xpath("//span[@id='productTitle']/text()").get()
         brand_name = response.xpath("//a[@id='bylineInfo']/text()").get()
         source = "Amazon"
         price = response.xpath("//span[@class='a-size-mini olpWrapper']/text()").get()
-        # extra stuff at start and end
         specs = response.xpath("//div[@id='productDescription']/p/text()").get()
         stars_aggregate = response.xpath("//span[@class='a-icon-alt']/text()").get()
         number_reviews = response.xpath("//span[@id='acrCustomerReviewText']/text()").get()

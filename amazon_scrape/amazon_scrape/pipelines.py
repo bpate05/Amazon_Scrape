@@ -39,6 +39,7 @@ class AmazonScrapePipeline(object):
             db = client.Amazon
             gpr = db.GoProReviews
             var = item['product_id']
+            # update all GoProReview items to have product_id from Products collection item
             gpr.update_many({},
                 { '$set':
                     {
