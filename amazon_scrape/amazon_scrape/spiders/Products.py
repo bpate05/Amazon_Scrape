@@ -46,7 +46,7 @@ class ProdcutsSpider(scrapy.Spider):
 
         # convert string to float--price
         price = re.findall(r"[$](\d+(?:\.\d{1,2})?)", price)
-        price = float(''.join(price))
+        price = float(price[0])
 
         yield {
             'product_name': items['product_name'].strip(),
